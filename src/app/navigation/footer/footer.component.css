@@ -25,9 +25,11 @@ footer.CSS {
   font-size: 14px;
   letter-spacing: 0.5px;
   border-top: 3px solid #ffcc00; /* Adds a colored border at the top */
-  position: relative;
+  position: fixed;
   bottom: 0;
+  left: 0;
   width: 100%;
+  z-index: 1000; /* Ensures footer stays above other content */
 }
 
 footer.CSS p {
@@ -52,4 +54,3 @@ footer.CSS div {
     font-size: 12px;
   }
 }
-
