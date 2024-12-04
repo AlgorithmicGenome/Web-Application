@@ -1,17 +1,5 @@
 <app-header></app-header>
 <main>
-  <!-- app.component.html -->
-  <div *ngIf="isAuthenticated">
-    <button (click)="goToCreatePost()">New Post</button>
-    <button (click)="goToPostList()">Posts</button>
-    <button (click)="logout()">Logout</button>
-  </div>
-
-  <!--<div *ngIf="!isAuthenticated">
-    <button (click)="goToLogin()">Login</button>
-    <button (click)="goToSignup()">Signup</button>
-  </div>-->
-
   <router-outlet></router-outlet>
 </main>
 <app-footer></app-footer>

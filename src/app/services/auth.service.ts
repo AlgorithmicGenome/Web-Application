@@ -8,7 +8,7 @@ import { Router } from "@angular/router";
 
 export class AuthService {
   private apiUrl = 'http://localhost:3000/api/user/login'; // Ensure this is correct
-  private isAuthenticated: boolean = false;
+  private isAuthenticated: boolean = false; // TODO: Flip this to true to bypass auth
   private authStatusListener = new Subject<boolean>();
   private token: string | null = null;
   private tokenTimer: ReturnType<typeof setTimeout> | null = null;
@@ -38,11 +38,14 @@ export class AuthService {
   login(email: string, password: string): Observable<{ token: string; expiresIn: number }> {
     const authData = { email: email, password: password };
 
+    // This is a hack to get the isAuthenticated flag set to true on login
+    this.isAuthenticated = true
+
     // Now this returns an Observable
     return this.http.post<{ token: string; expiresIn: number }>(
       "http://localhost:3000/api/user/login",
       authData
-    );
+    )
   }
 
   logout() {
@@ -77,17 +80,17 @@ export class AuthService {
   }
 
   private saveAuthData(token: string, expirationDate: Date) {
-    localStorage.setItem('token', token);
+    localStorage.setItem('authToken', token);
     localStorage.setItem('expiration', expirationDate.toISOString());
   }
 
   private clearAuthData() {
-    localStorage.removeItem('token');
+    localStorage.removeItem('authToken');
     localStorage.removeItem('expiration');
   }
 
   private getAuthData() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     const expirationDate = localStorage.getItem('expiration');
     if (!token || !expirationDate) {
       return;

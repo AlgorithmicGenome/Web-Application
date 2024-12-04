@@ -116,7 +116,7 @@ app.post('/api/user/login', async (req, res) => {
 // Example Authenticated Route
 app.get('/api/posts', authenticateJWT, async (req, res) => {
   try {
-    const posts = await Post.find();
+    const posts = await mongoose.Post.find();
     res.status(200).json(posts);
   } catch (err) {
     console.error('Error fetching posts.js:', err);

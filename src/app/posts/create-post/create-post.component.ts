@@ -38,6 +38,7 @@ export class CreatePostComponent implements OnInit {
   }
 
   onAddPost(form: NgForm) {
+    console.log("are we hitting this")
     if (form.invalid) {
       return;
     }

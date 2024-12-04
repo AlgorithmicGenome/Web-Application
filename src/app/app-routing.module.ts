@@ -9,10 +9,10 @@ import { AuthGuard } from './services/auth.guard'; // Correct the path if needed
 
 const routes: Routes = [
   { path: '', component: PostListComponent }, // Public: List posts.js
-  { path: 'create', component: CreatePostComponent, canActivate: [AuthGuard] }, // Protected: Create posts.js
+  { path: 'create', component: CreatePostComponent, canActivate: [AuthGuard] },
   { path: 'edit/:postId', component: CreatePostComponent, canActivate: [AuthGuard] }, // Protected: Edit posts.js
   { path: 'login', component: LoginComponent }, // Public: Login
-  { path: 'signup.js', component: SignupComponent }, // Public: Signup
+  { path: 'signup', component: SignupComponent }, // Public: Signup
   { path: '**', redirectTo: '', pathMatch: 'full' }, // Wildcard: Redirect invalid routes to home
 ];
 
