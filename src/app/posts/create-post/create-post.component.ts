@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { PostService } from '../post.service';
-/*import { Router } from '@angular/router';*/
-import {ActivatedRoute, ParamMap} from "@angular/router";
-import { Post } from '../post.model';
+import { PostService } from '../post.service';  // Correct import
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-post',
@@ -11,14 +9,15 @@ import { Post } from '../post.model';
   styleUrls: ['./create-post.component.css'],
 })
 export class CreatePostComponent implements OnInit {
-  post = {id: '', title: '', content: '' };  // Define a post object to bind with the form
+  post = { title: '', content: '' };  // Define a post object to bind with the form
   isLoading: boolean = false;
-  private mode: string = 'create';
-  private postId: string = '';
+  public mode: string = 'create';  // Mode for either creating or editing
+  private postId: string = '';     // Holds the postId for edit mode
 
   constructor(
     public postService: PostService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -29,9 +28,8 @@ export class CreatePostComponent implements OnInit {
         this.isLoading = true;
         this.postService.getPostById(this.postId).subscribe(post => {
           this.isLoading = false;
-          this.post = {id: post._id, title: post.title, content: post.content};
+          this.post = { title: post.title, content: post.content };
         });
-
       } else {
         this.mode = 'create';
         this.postId = '';
@@ -44,112 +42,31 @@ export class CreatePostComponent implements OnInit {
       return;
     }
 
+    console.log('Form values:', form.value); // Log form values to the console
     this.isLoading = true;
-    if (this.mode === 'create') {
-      this.postService.addPost(form.value.title, form.value.content);
-      form.resetForm()
-    } else{
-      this.postService.updatePost(this.postId, form.value.title, form.value.content);
-    }
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { PostService } from '../post.service';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Post } from '../post.model';
-import { Router } from '@angular/router';
-
-@Component({
-  selector: 'app-create-post',
-  templateUrl: './create-post.component.html',
-  styleUrls: ['./create-post.component.css']
-})
-export class CreatePostComponent implements OnInit {
-  post: Post = { _id: '', title: '', content: '' }; // Initialize the post object
-  isLoading: boolean = false;
-  private mode: string = 'create'; // Mode can be 'create' or 'edit'
-  private postId: string = ''; // Store the ID of the post
-
-  constructor(
-    public postService: PostService,
-    public route: ActivatedRoute,
-    private router: Router // Inject router for navigation
-  ) {}
-
-  ngOnInit() {
-    // Subscribe to the route parameter map to check if we are in edit mode
-    this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      if (paramMap.has('postId')) {
-        // If postId exists, we are editing an existing post
-        this.mode = 'edit';
-        this.postId = <string>paramMap.get('postId');
-        this.isLoading = true;
-        this.postService.getPostById(this.postId).subscribe(post => {
-          this.isLoading = false;
-          this.post = { _id: post._id, title: post.title, content: post.content }; // Populate post data for editing
-        });
-      } else {
-        // No postId, we are creating a new post
-        this.mode = 'create';
-        this.postId = '';
-      }
-    });
-  }
-
-
-
-  // Handles both create and update actions
-  onAddPost(form: NgForm) {
-    if (form.invalid) {
-      return; // Don't submit if form is invalid
-    }
-    this.isLoading = true; // Start loading indicator
 
     if (this.mode === 'create') {
-      // Create a new post
       this.postService.addPost(form.value.title, form.value.content).subscribe(
         () => {
-          this.router.navigate(['/posts']); // Navigate to posts after successful creation
-          form.resetForm(); // Reset the form after submission
+          this.isLoading = false;
+          this.router.navigate(['/']); // Navigate after posting
         },
-        error => {
-          console.error('Failed to create post:', error);
-          this.isLoading = false; // Stop loading on error
+        (error) => {
+          console.error('Error adding post:', error);
+          this.isLoading = false;
         }
       );
     } else {
-      // Update an existing post
       this.postService.updatePost(this.postId, form.value.title, form.value.content).subscribe(
         () => {
-          this.router.navigate(['/posts']); // Navigate to posts after successful update
-          form.resetForm(); // Reset the form after submission
+          this.isLoading = false;
+          this.router.navigate(['/']); // Navigate after updating the post
         },
-        error => {
-          console.error('Failed to update post:', error);
-          this.isLoading = false; // Stop loading on error
+        (error) => {
+          console.error('Error updating post:', error);
+          this.isLoading = false;
         }
       );
     }
   }
 }
-*/

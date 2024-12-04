@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Signup Endpoint
 router.post('/signup', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { email, password } = req.body;
 
   try {
     const existingUser = await User.findOne({ email });
@@ -13,7 +13,7 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ message: 'Email already in use.' });
     }
 
-    const user = new User({ name, email, password });
+    const user = new User({ email, password });
     await user.save();
 
     res.status(201).json({ success: true, message: 'Signup successful!' });

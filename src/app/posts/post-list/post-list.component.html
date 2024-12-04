@@ -1,11 +1,20 @@
+<!-- Loading spinner when data is being fetched -->
 <mat-spinner *ngIf="isLoading"></mat-spinner>
-<mat-accordion multi="true" *ngIf="posts.length>0 && !isLoading">
-  <!--    structure directives-->
+
+<!-- Button to create a new post, only shown to authenticated users -->
+<div *ngIf="userIsAuthenticated" class="create-post-btn">
+  <button mat-raised-button color="primary" [routerLink]="['/create']">Create New Post</button>
+</div>
+
+<!-- Accordion to display posts.js if available -->
+<mat-accordion multi="true" *ngIf="posts.length > 0 && !isLoading">
   <mat-expansion-panel *ngFor="let post of posts">
     <mat-expansion-panel-header>
-      {{post.title}}
+      {{ post.title }}
     </mat-expansion-panel-header>
-    <p>{{post.content}}</p>
+    <p>{{ post.content }}</p>
+
+    <!-- Action buttons for editing and deleting (only visible to authenticated users) -->
     <mat-action-row *ngIf="userIsAuthenticated">
       <button mat-button color="primary" [routerLink]="['/edit', post.id]">Edit</button>
       <button mat-button color="warn" (click)="onDelete(post.id)">Delete</button>
@@ -13,4 +22,5 @@
   </mat-expansion-panel>
 </mat-accordion>
 
-<p class="info-text mat-body-1" *ngIf="posts.length <=0 && !isLoading"> No post added yet</p>
+<!-- Display a message if no posts.js are available -->
+<p class="info-text mat-body-1" *ngIf="posts.length <= 0 && !isLoading">No posts added yet. Be the first to create one!</p>

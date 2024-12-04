@@ -1,184 +1,332 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
 import cors from 'cors';
-import http from 'http'; // Import the http module
-import dotenv from 'dotenv';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs'; // For password hashing
+import dotenv from 'dotenv';
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
 
 // Middleware
-app.use(express.json()); // Parses JSON bodies
-app.use(express.urlencoded({ extended: true })); // Parses URL-encoded bodies
 app.use(cors({
-  origin: 'http://localhost:4200', // Allow requests from Angular app
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: 'http://localhost:4200', // Allow requests from the frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
 }));
 
-// MongoDB connection
-mongoose.connect('mongodb://localhost:27017/backend')
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/backend')
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Error connecting to MongoDB:', err));
 
-// User Schema (for Authentication)
+// User Schema (Authentication)
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
 });
 
 const User = mongoose.model('User', userSchema);
 
-// Post Schema (for Posts)
-const postSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  content: { type: String, required: true }
-});
+// Middleware to Authenticate JWT
+const authenticateJWT = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(' ')[1]; // Get token from header
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+      if (err) {
+        return res.sendStatus(403); // Forbidden if token is invalid
+      }
+      req.user = user; // Attach user to request
+      next();
+    });
+  } else {
+    res.sendStatus(401); // Unauthorized if token is missing
+  }
+};
 
-const Post = mongoose.model('Post', postSchema);
-
-// Routes
-
-// Signup Route (Register new user)
-app.post('/api/signup', async (req, res) => {
-  console.log(req.body); // Log the body to see its content
-  const { username, password } = req.body;
-
+// User Signup Route
+app.post('/api/user/signup', async (req, res) => {
+  console.log('Signup request received:', req.body);
   try {
-    // Check if user already exists
-    const existingUser = await User.findOne({ username });
+    const { email, password } = req.body;
+
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Hash the password
+    // Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
-    const newUser = new User({ username, password: hashedPassword });
+    // Create a new user
+    const newUser = new User({ email, password: hashedPassword });
     await newUser.save();
 
-    res.status(201).json({ message: 'User created successfully' });
+    res.status(201).send({ message: 'User created successfully' });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error('Error during signup.js:', err);
+    res.status(500).send({ message: 'Internal Server Error' });
   }
 });
 
-// Login Route (Authenticate user and return JWT)
-app.post('/api/login', async (req, res) => {
-  const { username, password } = req.body;
+// User Login Route
+app.post('/api/user/login', async (req, res) => {
+  console.log('Login request received:', req.body);
+  const { email, password } = req.body;
 
   try {
-    // Find user
-    const user = await User.findOne({ username });
+    // Validate input
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+
+    // Check if user exists
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: 'Invalid username or password' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    // Compare passwords
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid username or password' });
+    // Validate password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid password' });
     }
 
-    // Generate JWT token
+    // Generate token
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    res.status(200).json({ message: 'Login successful', token });
+    res.status(200).json({ token });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error('Error during login.js:', err);
+    res.status(500).send({ message: 'Internal Server Error' });
   }
 });
 
-// Middleware to authenticate JWT token
-const authenticateJWT = (req, res, next) => {
-  const token = req.header('Authorization') && req.header('Authorization').split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ message: 'Access denied. No token provided.' });
+// Example Authenticated Route
+app.get('/api/posts', authenticateJWT, async (req, res) => {
+  try {
+    const posts = await Post.find();
+    res.status(200).json(posts);
+  } catch (err) {
+    console.error('Error fetching posts.js:', err);
+    res.status(500).json({ error: err.message });
   }
+});
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: 'Invalid token' });
+// Start the Server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+/*import mongoose from 'mongoose';
+import cors from 'cors';
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs'; // For password hashing
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+/!*const express = require('express');*!/
+const app = express();
+
+// Middleware
+app.use(cors({
+  origin: 'http://localhost:4200', // Allow requests from the frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/backend')
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Error connecting to MongoDB:', err));
+
+// User Schema (Authentication)
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true }
+});
+
+const User = mongoose.model('User', userSchema);
+
+// Login Route (add password check)
+app.post('/api/user/login.js', async (req, res) => {
+  console.log('Login request received:', req.body);
+  const { email, password } = req.body;
+
+  try {
+    // Check if user exists
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
-    req.user = decoded; // Attach user info to request
-    next();
-  });
-};
 
-// Get All Posts (No Authentication needed)
-app.get('/api/posts', (req, res) => {
-  Post.find()
-    .then(posts => res.status(200).json(posts))
-    .catch(err => res.status(400).json({ error: err.message }));
+    // Add password verification here (you can hash passwords with bcrypt)
+    if (password !== user.password) { // Use bcrypt to compare hashed password in production
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Generate token
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.status(200).json({ token }); // Send the token
+  } catch (err) {
+    console.error('Error during login.js:', err);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 });
 
-// Create Post (Authentication required)
-app.post('/api/posts', authenticateJWT, (req, res) => {
-  console.log('Received POST request:', req.body);
+// Middleware to Authenticate JWT
+const authenticateJWT = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(' ')[1]; // Get token from header
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+      if (err) {
+        return res.sendStatus(403); // Forbidden if token is invalid
+      }
+      req.user = user; // Attach user to request
+      next();
+    });
+  } else {
+    res.sendStatus(401); // Unauthorized if token is missing
+  }
+};
+
+// Public Route: Get All Posts
+app.get('/api/posts.js', async (req, res) => {
+  try {
+    const posts.js = await Post.find();
+    res.status(200).json(posts.js);
+  } catch (err) {
+    console.error('Error fetching posts.js:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Authenticated Route: Create Post
+app.post('/api/posts.js', authenticateJWT, async (req, res) => {
   const { title, content } = req.body;
-  const post = new Post({ title, content });
-  post.save()
-    .then(result => res.status(201).json(result))
-    .catch(err => res.status(400).json({ error: err.message }));
-});
 
-// Basic route for testing
-app.get('/', (req, res) => {
-  res.send('Server is running!');
-});
-
-// Normalize port function
-const normalizePort = val => {
-  const port = parseInt(val, 10);
-  return isNaN(port) ? val : port >= 0 ? port : false;
-};
-
-// Error handling for server
-const onError = err => {
-  if (err.syscall !== "listen") {
-    throw err;
+  if (!title || !content) {
+    return res.status(400).json({ message: 'Title and content are required' });
   }
-  const bind = typeof addr === "string" ? "pipe " + addr : "port " + port;
-  switch (err) {
-    case "EACCES":
-      console.error(bind + " requires elevated privileges");
-      break;
-    case "EADDRINUSE":
-      console.error(bind + " is already in use");
-      break;
-    default:
-      throw err;
+
+  try {
+    const post = new Post({ title, content });
+    const result = await post.save();
+    res.status(201).json(result);
+  } catch (err) {
+    console.error('Error creating post:', err);
+    res.status(500).json({ error: err.message });
   }
-};
-
-// Log when the server starts listening
-const onListening = () => {
-  const addr = server.address();
-  const bind = typeof port === "string" ? "pipe " + port : "port " + port;
-  console.log("Listening on " + bind);
-};
-
-// Get the port from environment variables or fallback to 3000
-const port = normalizePort(process.env.PORT || "3000");
-app.set("port", port);
-
-// Create the server
-const server = http.createServer(app);
-server.on("error", onError);
-server.on("listening", onListening);
-server.listen(port);
-
-// Gracefully handle server shutdown
-process.on('SIGINT', () => {
-  console.log('Server shutting down...');
-  server.close(() => {
-    console.log('Server closed. Exiting process.');
-    process.exit(0);
-  });
 });
+
+// Authenticated Route: Update Post
+app.put('/api/posts.js/:postId', authenticateJWT, async (req, res) => {
+  const postId = req.params.postId;
+  const { title, content } = req.body;
+
+  if (!title || !content) {
+    return res.status(400).json({ message: 'Title and content are required' });
+  }
+
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    post.title = title;
+    post.content = content;
+    const updatedPost = await post.save();
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    console.error('Error updating post:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// User Signup Route (Add this route if missing)
+app.post('/api/user/signup.js', async (req, res) => {
+  console.log('Signup request received:', req.body);
+  try {
+    const { email, password } = req.body;
+
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
+    const newUser = new User({ email, password: hashedPassword });
+    await newUser.save();
+
+    // Respond with a success message
+    res.status(201).send({ message: 'User created successfully' });
+  } catch (err) {
+    console.error('Error during signup.js:', err);
+    res.status(500).send({ message: 'Internal Server Error' });
+  }
+});
+
+// User Login Route
+app.post('/api/user/login.js', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid password' });
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(200).json({ token });
+  } catch (err) {
+    console.error('Error during login.js:', err);
+    res.status(500).send({ message: 'Internal Server Error' });
+  }
+});
+
+
+// Start the Server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});*/

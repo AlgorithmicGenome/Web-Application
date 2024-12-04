@@ -1,76 +1,79 @@
-import {Post} from "./post.model"
-import {Injectable} from "@angular/core";
-import {Subject} from "rxjs";
-import {map} from "rxjs/operators"
-import {HttpClient} from "@angular/common/http";
-import {Router} from "@angular/router";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Observable, Subject } from 'rxjs';
+import { Post } from './post.model';  // Assuming you have a Post model
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class PostService {
   private posts: Post[] = [];
-  private postUpdated = new Subject<Post[]>();
+  private postsUpdated = new Subject<Post[]>(); // Subject for notifying post updates
 
+  constructor(private http: HttpClient, private router: Router) {}
 
-  constructor(private http: HttpClient, private router: Router) {
-  }
-
-  getPostUpdateListener() {
-    return this.postUpdated.asObservable();
-  }
-
-  getPost() {
-    // return this.posts;  //by reference
-    // return [...this.posts];  //copy of the list of post
-    this.http.get<{ success: boolean, data: any }>('http://localhost:3000/api/posts')
-      .pipe(map(postData => {
-        return postData.data.map((payLoad: any) => {
-          return {
-            title: payLoad.title,
-            content: payLoad.content,
-            id: payLoad._id
-          };
-        });
-      }))
-      .subscribe((transformedData) => {
-        this.posts = transformedData;
-        this.postUpdated.next([...this.posts]);
+  // Method to get all posts.js
+  getPosts(): void {
+    this.http.get<Post[]>('http://localhost:3000/api/posts')
+      .subscribe((posts: Post[]) => {
+        this.posts = posts;
+        this.postsUpdated.next([...this.posts]); // Notify listeners with the updated posts.js
       });
   }
 
-  getPostById(id: string) {
-    return this.http.get<{ _id: string, title: string, content: string }>('http://localhost:3000/api/posts/' + id);
+  // Method to get a post by ID for editing
+  getPostById(postId: string): Observable<any> {
+    return this.http.get<any>(`http://localhost:3000/api/posts/${postId}`);
   }
 
-  addPost(title: string, content: string) {
-    const post: Post = {id: '', title: title, content: content}
+  // Method to add a new post
+  addPost(title: string, content: string): Observable<any> {
+    const post = { title, content };
 
-    this.http.post<{ success: boolean, postId: string }>('http://localhost:3000/api/posts', post)
-      .subscribe((res) => {
-        const postId = res.postId;
-        post.id = postId;
-        this.posts.push(post);
-        this.postUpdated.next([...this.posts]);
-        this.router.navigate(['/']);
-      });
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.router.navigate(['/login']);
+      return new Observable();
+    }
+
+    const headers = { Authorization: `Bearer ${token}` };
+
+    return this.http.post<any>('http://localhost:3000/api/posts', post, { headers });
   }
 
-  updatePost(id: string, title: string, content: string) {
-    const post: Post = {id: id, title: title, content: content};
-    this.http.put<{ success: boolean }>('http://localhost:3000/api/posts/' + id, post).subscribe(res => {
-      const updatedPost = [...this.posts];
-      const oldPostIndex = updatedPost.findIndex(p => p.id === post.id);
-      this.posts = updatedPost;
-      this.postUpdated.next([...this.posts]);
-      this.router.navigate(['/']);
-    });
+  // Method to update a post
+  updatePost(postId: string, title: string, content: string): Observable<any> {
+    const post = { title, content };
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.router.navigate(['/login']);
+      return new Observable();
+    }
+
+    const headers = { Authorization: `Bearer ${token}` };
+
+    return this.http.put<any>(`http://localhost:3000/api/posts/${postId}`, post, { headers });
   }
 
-  deletePost(postId: string) {
-    this.http.delete('http://localhost:3000/api/posts/' + postId)
+  // Method to delete a post
+  deletePost(postId: string): void {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const headers = { Authorization: `Bearer ${token}` };
+
+    this.http.delete(`http://localhost:3000/api/posts/${postId}`, { headers })
       .subscribe(() => {
-        this.posts = this.posts.filter(post => post.id != postId);
-        this.postUpdated.next([...this.posts]);
+        this.posts = this.posts.filter(post => post.id !== postId);  // Remove the deleted post from the local posts.js array
+        this.postsUpdated.next([...this.posts]);  // Notify listeners about the updated posts.js list
       });
   }
 
+  // Method to get the posts.js update listener (for subscribing to post changes)
+  getPostUpdateListener(): Observable<Post[]> {
+    return this.postsUpdated.asObservable();
+  }
 }

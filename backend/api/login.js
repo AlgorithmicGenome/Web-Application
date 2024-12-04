@@ -4,8 +4,8 @@ import User from '../models/user.js';
 
 const router = express.Router();
 
-// Signin Endpoint
-router.post('/signin', async (req, res) => {
+// Login Endpoint
+router.post('/api/user/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -25,10 +25,10 @@ router.post('/signin', async (req, res) => {
     // Set the token as an HTTP-only cookie
     res.cookie('jwt', token, { httpOnly: true, maxAge: 3600000, secure: process.env.NODE_ENV === 'production' });
 
-    res.status(200).json({ success: true, message: 'Signin successful' });
+    res.status(200).json({ success: true, message: 'Login successful' });
   } catch (error) {
-    console.error('Signin Error:', error);
-    res.status(500).json({ success: false, message: 'Signin failed.' });
+    console.error('Login Error:', error);
+    res.status(500).json({ success: false, message: 'Login failed.' });
   }
 });
 

@@ -15,13 +15,13 @@ import Post from "../models/Post.js";
     res.status(500).json({ error: "Internal Server Error" });
   }
 }*/
-// Get all posts
+// Get all posts.js
 export const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find(); // Fetch all posts from the database
+    const posts = await Post.find(); // Fetch all posts.js from the database
     res.status(200).json(posts);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch posts", details: err.message });
+    res.status(500).json({ error: "Failed to fetch posts.js", details: err.message });
   }
 };
 

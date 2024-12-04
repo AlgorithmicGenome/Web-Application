@@ -1,29 +1,20 @@
-<mat-spinner *ngIf="isLoading"></mat-spinner> <!-- Spinner will show during loading -->
-<h1>Posts Page</h1>
-<mat-card *ngIf="!isLoading"> <!-- Form is shown only if not loading -->
-  <form (submit)="onAddPost(postForm)" #postForm="ngForm">
-
-    <!-- Title Field -->
-    <mat-form-field>
-      <input matInput type="text" name="title" placeholder="Enter Title"
-             [(ngModel)]="post.title"
-             required minlength="3"
-             #title="ngModel">n
-      <mat-error *ngIf="title.invalid">Title is a required field</mat-error>
+<mat-spinner *ngIf="isLoading"></mat-spinner> <!-- Spinner when loading -->
+<mat-card>
+  <form (ngSubmit)="onAddPost(postForm)" #postForm="ngForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput name="title" ngModel required placeholder="Post title" />
     </mat-form-field>
 
-    <!-- Content Field -->
-    <mat-form-field>
-      <textarea matInput rows="4" name="content" placeholder="Enter Content"
-                [(ngModel)]="post.content"
-                required minlength="5"
-                #content="ngModel"></textarea>
-
-      <mat-error *ngIf="content.invalid">Content is a required field</mat-error>
+    <mat-form-field appearance="outline">
+      <mat-label>Content</mat-label>
+      <textarea matInput name="content" ngModel required placeholder="Write your post here"></textarea>
     </mat-form-field>
 
-    <!-- Submit Button -->
-    <button mat-raised-button color="primary" type="submit">Submit</button>
-
+    <button mat-raised-button color="primary" type="submit" [disabled]="postForm.invalid || isLoading">
+      {{ isLoading ? 'Posting...' : 'Post' }}
+    </button>
   </form>
 </mat-card>
+
+

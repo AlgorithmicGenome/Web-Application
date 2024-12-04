@@ -1,41 +1,21 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-import Post from "./model/post.js";
-import postRoutes from "./routes/userRoutes.js";
-/*import cors from 'cors';*/
 
-
-
-
-
-
-
-/*dotenv.config();
-const PORT = process.env.PORT || 5000;
-const MONGOURL = process.env.MONGO_URL;
-
-mongoose
-  .connect(MONGOURL)
-  .then(() => {
-    console.log('Database Connected Successfully.');
-    app.listen(PORT, () => {
-      console.log('Server is Running on Port ${PORT}');
-    });
-  })
-  .catch((error) => console.log(error));*/
+import postRoutes from './routes/post.js';
+import userRoutes from './routes/user.js'
 
 
 mongoose.connect(process.env.MONGODB_KEY)
   .then(() => {
-    console.log('Database Connected Successfully.');
+    console.log('connected to db');
   }).catch(() => {
-  console.log('Server is Running on Port ${PORT}');
+  console.log('connection failed');
 });
-const app= express();
+
+const app = express();
+
 app.use(bodyParser.json());
-app.use(express.json());
 
 app.use(bodyParser.urlencoded({extended: false})); //used for URL encoding, e.i. Hello%20World%26
 
@@ -44,7 +24,7 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   );
   res.setHeader(
     'Access-Control-Allow-Methods',
@@ -53,7 +33,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/posts', postRoutes);
+app.use('/api/posts.js', postRoutes);
+app.use('/api/user', userRoutes);
 
 
 export default app;

@@ -1,43 +1,24 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {PostListComponent} from "./posts/post-list/post-list.component";
-import {CreatePostComponent} from "./posts/create-post/create-post.component";
-import { NewPostComponent } from './new-post/new-post.component'; // Replace with actual path
-import { SignupComponent } from './authentication/signup/signup.component';
+import { PostListComponent } from './posts/post-list/post-list.component';
+import { CreatePostComponent } from './posts/create-post/create-post.component';
 import { LoginComponent } from './authentication/login/login.component';
-import { AuthGuard } from './services/auth.guard';
+import { SignupComponent } from './authentication/signup/signup.component';
+import { AuthGuard } from './services/auth.guard'; // Correct the path if needed
 
-/*export interface Option {
-  name: string;
-  action?: () => void; // Optional action for each chip
-}*/
+
 const routes: Routes = [
-  {path:'', component: PostListComponent},
-  {path:'create', component: CreatePostComponent, canActivate: [AuthGuard]},
-  {path:'edit/:postId', component: CreatePostComponent, canActivate: [AuthGuard]},
-  {path:'login', component: LoginComponent},
-  {path:'signup', component: SignupComponent},
+  { path: '', component: PostListComponent }, // Public: List posts.js
+  { path: 'create', component: CreatePostComponent, canActivate: [AuthGuard] }, // Protected: Create posts.js
+  { path: 'edit/:postId', component: CreatePostComponent, canActivate: [AuthGuard] }, // Protected: Edit posts.js
+  { path: 'login', component: LoginComponent }, // Public: Login
+  { path: 'signup.js', component: SignupComponent }, // Public: Signup
+  { path: '**', redirectTo: '', pathMatch: 'full' }, // Wildcard: Redirect invalid routes to home
 ];
 
-  @NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule],
-  })
-  export class AppRoutingModule {}
 
-/*/!*{path: '', redirectTo: '/login', pathMatch: 'full' }, // Default route*!/
-  { path: '', redirectTo: '/posts', pathMatch: 'full' }, // Default roun3
-  { path: 'posts', component: PostListComponent, canActivate: [AuthGuard] },
-/!*
-  {path: 'new-post', component: PostFormComponent },
-*!/
-  {path:'create', component: CreatePostComponent},
-/!*
-  {path:'edit/:postId', component: PostFormComponent},
-*!/
-  {path:'edit/:postId', component: CreatePostComponent},
-  { path: '', component: PostListComponent },
-  { path: 'signup', component: SignupComponent },
-  { path: 'login', component: LoginComponent },
-
-];*/
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

@@ -1,23 +1,17 @@
 <app-header></app-header>
 <main>
- <!--Login and Signup Buttons (visible when user is not authenticated)
-<mat-button *ngIf="!isAuthenticated" routerLink="/login">Login</mat-button>
-<mat-button *ngIf="!isAuthenticated" routerLink="/signup">Sign Up</mat-button>
+  <!-- app.component.html -->
+  <div *ngIf="isAuthenticated">
+    <button (click)="goToCreatePost()">New Post</button>
+    <button (click)="goToPostList()">Posts</button>
+    <button (click)="logout()">Logout</button>
+  </div>
 
-&lt;!&ndash; SignIn, Post, New Post, and Logout Buttons (visible when user is authenticated) &ndash;&gt;
-<mat-button *ngIf="isAuthenticated" routerLink="/posts">Posts</mat-button>
-<mat-button *ngIf="isAuthenticated" routerLink="/create-post">New Post</mat-button>
-  <button mat-button *ngIf="isAuthenticated" (click)="onLogout()" color="warn">Logout</button>
+  <!--<div *ngIf="!isAuthenticated">
+    <button (click)="goToLogin()">Login</button>
+    <button (click)="goToSignup()">Signup</button>
+  </div>-->
 
-
-&lt;!&ndash; Optionally, you can style the buttons with color and icons &ndash;&gt;
-<mat-button *ngIf="!isAuthenticated" routerLink="/login" color="primary">Login</mat-button>
-<mat-button *ngIf="!isAuthenticated" routerLink="/signup" color="accent">Sign Up</mat-button>
-
-<mat-button *ngIf="isAuthenticated" routerLink="/posts" color="warn">Posts</mat-button>
-<mat-button *ngIf="isAuthenticated" routerLink="/create-post" color="primary">New Post</mat-button>
-  <button mat-button *ngIf="isAuthenticated" (click)="onLogout()" color="warn">Logout</button>
--->
   <router-outlet></router-outlet>
 </main>
 <app-footer></app-footer>

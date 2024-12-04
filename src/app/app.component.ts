@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from './services/auth.service';
 import { Router } from '@angular/router';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -13,37 +13,35 @@ export class AppComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-    // Check if the user is authenticated when the app starts
-    this.authService.getAuthStatusListener().subscribe((authStatus) => {
-      this.isAuthenticated = authStatus;
+    // Subscribe to the authentication status
+    this.authService.getAuthStatusListener().subscribe(isAuthenticated => {
+      this.isAuthenticated = isAuthenticated;
     });
-
-    // Auto-authenticate user if token exists
-    this.authService.autoAuthUser();
   }
 
-  // Logout functionality
-  onLogout() {
+  // Navigate to Post List page
+  goToPostList() {
+    this.router.navigate(['/']);
+  }
+
+  // Navigate to New Post page
+  goToCreatePost() {
+    this.router.navigate(['/create']);
+  }
+
+  // Handle Logout
+  logout() {
     this.authService.logout();
-  }
-
-  // Redirect to Posts page
-  onGoToPosts() {
-    this.router.navigate(['/posts']);
-  }
-
-  // Redirect to New Post page
-  onGoToNewPost() {
-    this.router.navigate(['/create-post']);
+    this.router.navigate(['/login']);
   }
 
   // Navigate to Login page
-  onLogin() {
+  goToLogin() {
     this.router.navigate(['/login']);
   }
 
   // Navigate to Signup page
-  onSignup() {
+  goToSignup() {
     this.router.navigate(['/signup']);
   }
 }

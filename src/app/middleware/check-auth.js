@@ -1,4 +1,6 @@
 // Middleware to authenticate JWT token
+import jwt from "jsonwebtoken";
+
 const authenticateJWT = (req, res, next) => {
   const token = req.header('Authorization') && req.header('Authorization').split(' ')[1];
   if (!token) {

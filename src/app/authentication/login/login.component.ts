@@ -1,33 +1,51 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router'; // Import Router
+import { NgForm } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { AuthResponse } from '../../models/auth-response.model'; // Correct import path;
-
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-login.js',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent {
-  username: string = '';
-  password: string = '';
+  isLoading = false;
+  errorMessage: string = ''; // To display error messages to the user
 
-// Inject AuthService, not PostService
-  constructor(private authService: AuthService, private router: Router) {}  // Inject Router here
+  constructor(
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
 
-  onLogin() {
-    this.authService.login(this.username, this.password).subscribe(
-      (response: AuthResponse) => { // Explicitly typing the response
-        alert('Signup successful: ' + response.message); // Handle the message from AuthResponse
-        localStorage.setItem('token', response.token); // Store token in localStorage
-        this.router.navigate(['/login']); // Redirect after successful signup
+  onLogin(form: NgForm) {
+    if (form.invalid) {
+      console.log('Invalid form:', form);
+      return;
+    }
+
+    console.log('Form Submitted:', form.value);
+    this.isLoading = true;
+
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/'; // Default redirect route after login.js
+
+    // Call login.js service method
+    this.authService.login(form.value.email, form.value.password).subscribe(
+      (response) => {
+        console.log('Login successful:', response);
+        this.isLoading = false;
+        // Store the token received from the backend (use localStorage or any other method)
+        localStorage.setItem('authToken', response.token);
+        // Redirect the user to the desired route
+        this.router.navigate([returnUrl]);
       },
-      (error: any) => { // Handle error with explicit type
-        alert('Signup failed: ' + error.message); // Display error message
+      (error) => {
+        console.error('Login error:', error);
+        this.isLoading = false;
+        // Handle error message
+        this.errorMessage = error?.error?.message || 'Login failed. Please try again.';
       }
     );
   }
 }
-
-

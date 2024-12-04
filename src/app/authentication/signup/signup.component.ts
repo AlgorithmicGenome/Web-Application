@@ -1,31 +1,33 @@
 import { Component } from '@angular/core';
-import {NgForm} from "@angular/forms";
-import { Router } from '@angular/router'; // Import Router
+import { NgForm } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { AuthResponse } from '../../models/auth-response.model'; // Correct import path
 
 @Component({
-  selector: 'app-signup',
+  selector: 'app-signup.js',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent {
-  isLoading: boolean = false;
-  username: string = '';
-  password: string = '';
+  isLoading = false; // Tracks loading state for UX feedback
 
-  constructor(private authService: AuthService, private router: Router) {}  // Inject Router here
+  constructor(public authService: AuthService) {}
 
-  onSignup() {
-    this.authService.signup(this.username, this.password).subscribe(
-      (response: AuthResponse) => { // Explicitly typing the response
-        alert('Signup successful: ' + response.message); // Handle the message from AuthResponse
-        localStorage.setItem('token', response.token); // Store token in localStorage
-        this.router.navigate(['/login']); // Redirect after successful signup
-      },
-      (error: any) => { // Handle error with explicit type
-        alert('Signup failed: ' + error.message); // Display error message
-      }
-    );
+  onSignup(form: NgForm) {
+    // Check if the form is valid before submission
+    if (form.invalid) {
+      console.log('Invalid form:', form.value); // Debug form values for invalid cases
+      alert('Please fill out all required fields correctly.');
+      return;
+    }
+
+    console.log('Signup form submitted:', form.value); // Debug form value
+    this.isLoading = true; // Start loading indicator
+
+    // Call the service to create a new user
+    this.authService.createUser(form.value.email, form.value.password);
+
+    // Optionally reset the form and loading state
+    form.resetForm();
+    this.isLoading = false;
   }
 }
