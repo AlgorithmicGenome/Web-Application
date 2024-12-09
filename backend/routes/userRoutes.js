@@ -1,42 +1,57 @@
-import express from 'express';
-/*import multer from "multer";*/
-import User from "../model/user.js";
+import express from 'express'
+import User from '../model/user.js'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
-const router = express.Router();
+const router = express.Router()
 
-// Set up multer for file storage
-/*const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.fieldname + "_" + Date.now() + '-' + file.originalname);
-  }
-});
-
-const upload = multer({ storage: storage,
-}).single("image");*/
-
-// Route to handle file uploads
-// Handle adding a new user (or "post")
-router.post('/api/add', async (req, res) => {
+router.post('/signup', async (req, res) => {
   try {
-    const { name, phone, title, content, email, } = req.body;
+    const { email, password } = req.body
+    const encryptedPassword = await bcrypt.hash(password, 10)
 
     const newUser = new User({
-      name,
-      phone,
-      title,
-      content,
       email,
-    });
+      password: encryptedPassword
+    })
 
-    await newUser.save();
-    res.status(200).json({ success: true });
+    await newUser.save()
+    res.status(200).json({ success: true })
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, error });
+    console.error(error)
+    res.status(500).json({ success: false, error })
   }
-});
+})
 
-export default router;
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body
+    const user = await User.findOne({ email })
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' })
+    }
+    if (await bcrypt.compare(password, user.password)) {
+      const { password, ...rest } = user._doc
+      const token = jwt.sign(
+        { id: rest._id, email: rest.email },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '1d'
+        }
+      )
+      return res
+        .status(200)
+        .json({ success: true, user: rest, token, expiresIn: 86400 })
+    } else {
+      return res
+        .status(401)
+        .json({ success: false, message: 'Invalid credentials' })
+    }
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ success: false, error })
+  }
+})
+
+export default router

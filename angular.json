@@ -26,11 +26,13 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/deeppurple-amber.css",
-              "src/styles.css",
+              "styles.css",
               "node_modules/bootstrap/dist/css/bootstrap.css"
             ],
-            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.js"]
-        },
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.js"
+            ]
+          },
           "configurations": {
             "production": {
               "budgets": [
@@ -86,11 +88,11 @@
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "assets"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.css"
+              "styles.css"
             ],
             "scripts": []
           }

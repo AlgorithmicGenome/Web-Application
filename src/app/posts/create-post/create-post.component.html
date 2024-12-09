@@ -2,19 +2,32 @@
 <mat-card>
   <form (ngSubmit)="onAddPost(postForm)" #postForm="ngForm">
     <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput name="name" ngModel required placeholder="Post Name" [value]="post.name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
       <mat-label>Title</mat-label>
-      <input matInput name="title" ngModel required placeholder="Post title" />
+      <input matInput name="title" ngModel required placeholder="Post title" [value]="post.title" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Phone</mat-label>
+      <input matInput name="phone" ngModel required placeholder="Post phone number" [value]="post.phone" />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Content</mat-label>
-      <textarea matInput name="content" ngModel required placeholder="Write your post here"></textarea>
+      <textarea matInput name="content" ngModel required placeholder="Write your post here"
+        [value]="post.content"></textarea>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="postForm.invalid || isLoading">
+    <button *ngIf="mode === 'create'" mat-raised-button color="primary" type="submit"
+      [disabled]="postForm.invalid || isLoading">
       {{ isLoading ? 'Posting...' : 'Post' }}
+    </button>
+    <button *ngIf="mode === 'edit'" mat-raised-button color="primary" type="submit" [disabled]="isLoading">
+      {{ isLoading ? 'Updating...' : 'Update' }}
     </button>
   </form>
 </mat-card>
-
-

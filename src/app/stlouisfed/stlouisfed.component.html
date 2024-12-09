@@ -1,0 +1,15 @@
+<div class="stlouisfed-container">
+  <h1>Stlouisfed List</h1>
+  <div *ngFor="let item of stlouisfed">
+    <div class="stlouisfed-item">
+      <p><strong>ID: </strong> {{item.id}}</p>
+      <p><strong>Title: </strong> {{item.title}}</p>
+      <p><strong>Frequency: </strong> {{item.frequency}}</p>
+      <p><strong>Units: </strong> {{item.units}}</p>
+      <p><strong>Seasonal Adjustment: </strong> {{item.seasonal_adjustment}}</p>
+      <p><strong>Last Updated: </strong> {{item.last_updated}}</p>
+      <p><strong>Popularity: </strong> {{item.popularity}}</p>
+      <p><strong>Notes: </strong> {{item.notes}}</p>
+    </div>
+  </div>
+</div>

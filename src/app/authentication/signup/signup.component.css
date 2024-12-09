@@ -1,5 +1,5 @@
 mat-card {
-  margin:5px;
+  margin: 5px;
 }
 
 form {
@@ -8,7 +8,7 @@ form {
   display: grid;
 }
 
-button{
+button {
   width: 20%;
   margin: 5px;
 }

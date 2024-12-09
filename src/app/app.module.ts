@@ -21,6 +21,7 @@ import { PostService } from './services/post.service';
 import { LoginComponent } from './authentication/login/login.component';
 import { SignupComponent } from './authentication/signup/signup.component';  // Correct import path
 import { MatButtonModule } from '@angular/material/button';
+import { StlouisfedComponent } from './stlouisfed/stlouisfed.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { MatButtonModule } from '@angular/material/button';
     PostListComponent,
     LoginComponent,
     SignupComponent,
+    StlouisfedComponent,
   ],
   imports: [
     BrowserModule,
