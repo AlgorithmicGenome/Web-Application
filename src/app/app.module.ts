@@ -17,7 +17,7 @@ import { PostListComponent } from './posts/post-list/post-list.component';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { PostService } from './posts/post.service';
+import { PostService } from './services/post.service';
 import { LoginComponent } from './authentication/login/login.component';
 import { SignupComponent } from './authentication/signup/signup.component';  // Correct import path
 import { MatButtonModule } from '@angular/material/button';

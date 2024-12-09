@@ -1,0 +1,110 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Set Base Body */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(to right, #eceff1, #ffffff);
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Header Section */
+header {
+    background: black;
+    color: gold;
+    padding: 10px 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.nav {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: gold;
+    padding: 8px 15px;
+    border: 1px solid gold;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-item a:hover {
+    background-color: gold;
+    color: black;
+}
+
+/* Footer Section */
+footer {
+    background: black;
+    color: gold;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.9rem;
+    border-top: 3px solid gold;
+}
+
+/* Button Styling */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: gold;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn:hover {
+    background: black;
+    color: gold;
+    border: 1px solid gold;
+}
+
+/* Main Content Section */
+.container {
+    padding: 20px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: black;
+    margin-bottom: 15px;
+}
+
+p {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}

@@ -1,13 +1,115 @@
+<!--
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Modern App</title>
+  &lt;!&ndash; External CSS Libraries &ndash;&gt;
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+  />
+  <link rel="stylesheet" href="header.component.html" />
+</head>
+
+<body>
+&lt;!&ndash; Header Section &ndash;&gt;
+<header>
+  <div class="navbar">
+    <div class="logo">Analytics Consulting, LCC</div>
+    <nav>
+      <ul>
+        <li class="nav-item">
+          <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/"><i class="fas fas fa-pencil-alt me-1"></i>Posts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/add"><i class="fas fa-user-plus me-1"></i>Add User</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about"><i class="fas fa-globe me-1"></i>About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact"><i class="fas fa-envelope me-1"></i>Contact</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/Login"><i class="fas fa-key me-1"></i>Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/Signup"><i class="fas fa-sign-in-alt me-1"></i>Signup</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/Logout"><i class="fas fa-lock me-1"></i>Logout</a>
+        </li>
+        <li class="auth-section" id="authSection">
+          &lt;!&ndash;<button class="btn btn-primary login-btn" onclick="showLoginPopup()">Login</button>&ndash;&gt;
+          <button class="btn btn-danger logout-btn d-none" onclick="onLogout()">Logout</button>
+        </li>
+        &lt;!&ndash;<li>
+          <a class="nav-link" href="/signup">Signup</a>
+        </li>&ndash;&gt;
+      </ul>
+    </nav>
+  </div>
+</header>
+
+&lt;!&ndash; Login Modal &ndash;&gt;
+<div class="login-modal" id="loginModal">
+  <div class="modal-content">
+    <h2></h2>
+    <form id="loginForm">
+      <input
+        type="email"
+        class="form-control"
+        placeholder="Enter Email"
+        required
+      />
+      <input
+        type="password"
+        class="form-control"
+        placeholder="Enter Password"
+        required
+      />
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-success">Login</button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onclick="hideLoginPopup()"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+&lt;!&ndash;
 <mat-toolbar color="primary">
-  <span routerLink="/"><a>My Application</a></span>
+  <span routerLink="/"><a>My App</a></span>
   <span class="spacer"></span>
   <ul>
-    <li *ngIf="userIsAuthenticated">
-      <a mat-button routerLink="/create" routerLinkActive="active">New Post</a>
     <li>
+      <a mat-button routerLink="/joke" routerLinkActive="active">Jokes</a>
     </li>
     <li *ngIf="userIsAuthenticated">
-      <a mat-button routerLink="/post" routerLinkActive="active">Post</a>
+      <a mat-button routerLink="/create" routerLinkActive="active">New Post</a>
+    </li>
     <li *ngIf="!userIsAuthenticated">
       <a mat-button routerLink="/login" routerLinkActive="active">Login</a>
     </li>
@@ -19,3 +121,5 @@
     </li>
   </ul>
 </mat-toolbar>
+&ndash;&gt;
+-->

@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+/*import jwt from 'jsonwebtoken';
 import express from 'express';
 import User from '../models/user.js';
 
@@ -32,4 +32,4 @@ router.post('/api/user/login', async (req, res) => {
   }
 });
 
-export default router;
+export default router;*/

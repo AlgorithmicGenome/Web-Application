@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+/*import { Router } from '@angular/router';*/
 import { AuthService } from './services/auth.service';
 
 @Component({
@@ -8,18 +8,17 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  isAuthenticated = false;
+  constructor (private authService: AuthService) {}
+  /*isAuthenticated = false;*/
 
-  constructor(private authService: AuthService, private router: Router) {}
+  /*constructor(private authService: AuthService, private router: Router) {}*/
 
-  ngOnInit() {
-    // Subscribe to the authentication status
-    this.authService.getAuthStatusListener().subscribe(isAuthenticated => {
-      this.isAuthenticated = isAuthenticated;
-    });
+  ngOnInit(): void {
+    this.authService.autoAuthUser();
   }
+}
 
-  // Navigate to Post List page
+  /*// Navigate to Post List page
   goToPostList() {
     this.router.navigate(['/']);
   }
@@ -44,4 +43,4 @@ export class AppComponent implements OnInit {
   goToSignup() {
     this.router.navigate(['/signup']);
   }
-}
+}*/

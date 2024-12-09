@@ -1,70 +1,42 @@
 import express from 'express';
-import Post from '../model/post.js'
-import app from "../app.js";
-import checkAuth from "../middleware/check-auth.js";
+/*import multer from "multer";*/
+import User from "../model/user.js";
 
-const express = require('express');
 const router = express.Router();
-const Post = require('../models/post'); // Assuming you have a Post model const router = express.Router();
 
-
-router.post('/api/posts', checkAuth, async (req, res) => {
-  try {
-    const post = new Post({
-      title: req.body.title,
-      content: req.body.content,
-      creator: req.userData.userId, // From decoded token (if using JWT)
-    });
-    const createdPost = await post.save();
-    res.status(201).json({
-      message: 'Post added successfully',
-      postId: createdPost._id,
-    });
-  } catch (error) {
-    console.error('Error creating post:', error);
-    res.status(500).json({ message: 'Creating a post failed!' });
+// Set up multer for file storage
+/*const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + "_" + Date.now() + '-' + file.originalname);
   }
 });
 
-router.put('/:id', checkAuth, (req, res, next) => {
-  const post = new Post({
-    _id: req.body.id,
-    title: req.body.title,
-    content: req.body.content
-  });
-  Post.updateOne({_id: req.params.id}, post)
-    .then(result => {
-      res.status(200).json({success: true});
+const upload = multer({ storage: storage,
+}).single("image");*/
+
+// Route to handle file uploads
+// Handle adding a new user (or "post")
+router.post('/api/add', async (req, res) => {
+  try {
+    const { name, phone, title, content, email, } = req.body;
+
+    const newUser = new User({
+      name,
+      phone,
+      title,
+      content,
+      email,
     });
+
+    await newUser.save();
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error });
+  }
 });
 
-router.get('', (req, res, next) => {
-  Post.find()
-    .then(data => {
-      res.status(200).json({
-        success: true,
-        data: data
-      });
-    });
-});
-
-router.get('/:id', (req, res, next) => {
-  Post.findById(req.params.id).then(post => {
-    if (post) {
-      res.status(200).json(post);
-    } else {
-      res.status(404).json({
-        success: false,
-        message: 'data not found'
-      });
-    }
-  });
-});
-
-router.delete('/:id', checkAuth,(req, res, next) => {
-  Post.deleteOne({_id: req.params.id}).then(result => {
-    res.status(200).json({success: true});
-  });
-});
-
-module.exports = router;
+export default router;

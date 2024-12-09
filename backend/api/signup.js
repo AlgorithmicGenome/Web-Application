@@ -1,3 +1,4 @@
+/*
 import express from 'express';
 import User from '../models/user.js';
 
@@ -24,3 +25,4 @@ router.post('/signup', async (req, res) => {
 });
 
 export default router;
+*/

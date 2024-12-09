@@ -1,17 +1,23 @@
-// Middleware to authenticate JWT token
 import jwt from "jsonwebtoken";
 
 const authenticateJWT = (req, res, next) => {
   const token = req.header('Authorization') && req.header('Authorization').split(' ')[1];
+
+  console.log('Token received in server:', token); // Debugging line
+
   if (!token) {
     return res.status(401).json({ message: 'Access denied. No token provided.' });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
+      console.error('JWT error:', err);
       return res.status(401).json({ message: 'Invalid token' });
     }
-    req.user = decoded; // Attach user info to request
+
+    req.userData = decoded; // Attach user info to request
     next();
   });
 };
+
+export default authenticateJWT;

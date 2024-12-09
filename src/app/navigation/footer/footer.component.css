@@ -1,56 +1,71 @@
+/*
+!* General Reset *!
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+!* Set Base Body *!
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(to right, #eceff1, #ffffff);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.navbar ul {
+  list-style: none;
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  gap: 10px;
 }
 
-.content {
-  flex: 1;
-  padding: 20px;
-  background-color: #f4f4f4;
+.nav-item a,
+.btn {
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 4px;
+  transition: 0.3s ease;
 }
 
-footer.CSS {
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  padding: 20px;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  border-top: 3px solid #ffcc00; /* Adds a colored border at the top */
+.nav-item a:hover,
+.btn:hover {
+  background-color: #ff9800;
+}
+
+!* Modal Styling *!
+.login-modal {
+  display: none;
   position: fixed;
-  bottom: 0;
+  z-index: 100;
+  top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000; /* Ensures footer stays above other content */
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
 }
 
-footer.CSS p {
-  margin: 0;
-  padding: 0;
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
-footer.CSS span {
-  font-weight: bold;
-  color: #ffcc00; /* Highlight for name and year */
-}
-
-footer.CSS div {
-  max-width: 1200px;
-  margin: 0 auto;
+footer {
+  background: #333;
+  color: white;
+  text-align: center;
   padding: 10px;
+  font-size: 0.8rem;
 }
 
-@media (max-width: 768px) {
-  footer.CSS {
-    padding: 15px;
-    font-size: 12px;
-  }
-}
+*/

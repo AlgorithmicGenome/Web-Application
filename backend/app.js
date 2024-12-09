@@ -1,25 +1,23 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import mongoose from "mongoose";
-
-import postRoutes from './routes/post.js';
-import userRoutes from './routes/user.js'
+import mongoose from 'mongoose';
 
 
 mongoose.connect(process.env.MONGODB_KEY)
   .then(() => {
-    console.log('connected to db');
-  }).catch(() => {
-  console.log('connection failed');
-});
+    console.log('Connected to database');
+  })
+  .catch(() => {
+    console.log('Connection failed');
+  });
 
 const app = express();
 
+// Body parsing middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(bodyParser.urlencoded({extended: false})); //used for URL encoding, e.i. Hello%20World%26
-
-//adding header data
+// CORS Headers configuration
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
@@ -32,9 +30,6 @@ app.use((req, res, next) => {
   );
   next();
 });
-
-app.use('/api/posts.js', postRoutes);
-app.use('/api/user', userRoutes);
 
 
 export default app;

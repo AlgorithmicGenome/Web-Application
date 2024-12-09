@@ -1,0 +1,115 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Set Base Body */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(to right, #eceff1, #ffffff);
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Header Section */
+header {
+    background: black;
+    color: gold;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar ul {
+    display: flex;
+    list-style: none;
+    gap: 15px;
+}
+
+.nav-item a {
+    text-decoration: none;
+    color: gold;
+    padding: 8px 12px;
+    border: 1px solid gold;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-item a:hover {
+    background-color: gold;
+    color: black;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    background: gold;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn:hover {
+    background: black;
+    color: gold;
+}
+
+/* Main Content Section */
+.container {
+    padding: 20px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: gold;
+    margin-bottom: 15px;
+}
+
+p {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* Ensure HTML and body take full height */
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* The content wrapper grows to fill available space */
+.content {
+    flex: 1;
+}
+
+/* Footer styling */
+footer {
+    background-color: black;
+    color: gold;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+}
+
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}

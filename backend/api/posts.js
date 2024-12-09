@@ -1,5 +1,6 @@
+/*
 import express from 'express';
-import Post from '../models/post.js';
+import Post from '../model/post.js'
 
 const router = express.Router();
 
@@ -76,3 +77,4 @@ router.delete('/:id', async (req, res) => {
   }
 });
 export default router;
+*/

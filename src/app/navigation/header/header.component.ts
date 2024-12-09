@@ -11,14 +11,29 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userIsAuthenticated = false;
   private authListenerSub!: Subscription;
 
+  showLoginForm = false;
+  loginEmail = '';
+  loginPassword = '';
+
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
     this.userIsAuthenticated = this.authService.getIsAuth();
-    console.log(this.userIsAuthenticated)
+    console.log(this.userIsAuthenticated);
     this.authListenerSub = this.authService.getAuthStatusListener().subscribe((isAuthenticated) => {
       this.userIsAuthenticated = isAuthenticated;
     });
+  }
+
+  onLogin() {
+    if (this.loginEmail && this.loginPassword) {
+      this.authService.login(this.loginEmail, this.loginPassword);
+      this.showLoginForm = false;
+      this.loginEmail = '';
+      this.loginPassword = '';
+    } else {
+      alert('Please enter valid credentials!');
+    }
   }
 
   onLogout() {
@@ -30,6 +45,4 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.authListenerSub.unsubscribe();
     }
   }
-
 }
-
