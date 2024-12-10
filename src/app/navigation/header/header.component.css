@@ -1,29 +1,68 @@
-ul {
-  style: none;
-  padding: 0;
-  margin: 0;
+.gold-toolbar {
+  background-color: black; /* Gold background */
+  color: mistyrose; /* Text color for contrast */
+  font-weight: bold; /* Optional: Bold text for emphasis */
 }
 
-li {
-  style: none;
-}
-
-a {
+/*.gold-toolbar a {
+  color: mistyrose; !* Ensure links are visible *!
   text-decoration: none;
-  color: white;
-  margin-right: 5px !important;
-}
-
-.spacer {
-  flex: 1 1 auto;
-}
-
-ul {
-  display: flex;
-  list-style: none;
-}
-
-.active {
   font-weight: bold;
-  color: coral !important;
+}*/
+
+.gold-toolbar .spacer {
+  flex: 1; /* Pushes elements to the ends */
+}
+
+.gold-toolbar .nav {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+.gold-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: black;
+  color: mistyrose;
+  font-weight: bold;
+}
+.gold-toolbar .nav-item a,
+.gold-toolbar .nav-item button {
+  text-decoration: none;
+  color: mistyrose;
+  padding: 8px 15px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.gold-toolbar .nav-item a:hover,
+.gold-toolbar .nav-item button:hover {
+  background-color: white; /* Hover effect */
+  color: mistyrose;
+}
+
+.button-group {
+  display: inherit;
+  gap: 10px; /* Space between buttons */
+}
+
+.button-group a,
+.button-group button {
+  text-decoration: none;
+  color: black;
+  padding: 8px 15px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.button-group a:hover,
+.button-group button:hover {
+  background-color: black;
+  color: gold;
 }

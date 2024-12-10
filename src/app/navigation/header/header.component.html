@@ -1,21 +1,26 @@
-<mat-toolbar color="primary">
-  <span routerLink="/"><a>MEAN App</a></span>
+<mat-toolbar class="gold-toolbar mat-typography">
+  <span routerLink="/"><a>Salubrious Analytics, LLC</a></span>
   <span class="spacer"></span>
-  <ul>
-    <li>
-      <a mat-button routerLink="/stlouisfed" routerLinkActive="active">Stlouisfed</a>
-    </li>
-    <li *ngIf="userIsAuthenticated">
-      <a mat-button routerLink="/create" routerLinkActive="active">Create Post</a>
-    </li>
-    <li *ngIf="!userIsAuthenticated">
-      <a mat-button routerLink="/login" routerLinkActive="active">Login</a>
-    </li>
-    <li *ngIf="!userIsAuthenticated">
-      <a mat-button routerLink="/signup" routerLinkActive="active">Signup</a>
-    </li>
-    <li *ngIf="userIsAuthenticated">
-      <button mat-button (click)="onLogout()">Logout</button>
-    </li>
-  </ul>
+  <div class="button-group">
+    <button mat-fab extended routerLink="/stlouisfed" routerLinkActive="active">
+      <mat-icon>account_balance</mat-icon>
+      Stlouisfed
+    </button>
+    <button mat-fab extended routerLink="/create" routerLinkActive="active" *ngIf="userIsAuthenticated">
+      <mat-icon>post_add</mat-icon>
+      Create Post
+    </button>
+    <button mat-fab extended routerLink="/login" routerLinkActive="active" *ngIf="!userIsAuthenticated">
+      <mat-icon>login</mat-icon>
+      Login
+    </button>
+    <button mat-fab extended routerLink="/signup" routerLinkActive="active" *ngIf="!userIsAuthenticated">
+      <mat-icon>person_add</mat-icon>
+      Signup
+    </button>
+    <button mat-fab extended (click)="onLogout()" *ngIf="userIsAuthenticated">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </div>
 </mat-toolbar>

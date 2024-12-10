@@ -22,7 +22,7 @@ import { LoginComponent } from './authentication/login/login.component';
 import { SignupComponent } from './authentication/signup/signup.component';  // Correct import path
 import { MatButtonModule } from '@angular/material/button';
 import { StlouisfedComponent } from './stlouisfed/stlouisfed.component';
-
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,6 +48,7 @@ import { StlouisfedComponent } from './stlouisfed/stlouisfed.component';
     MatExpansionModule,
     BrowserAnimationsModule,
     CommonModule,
+    MatIconModule // Add MatIconModule here
   ],
   providers: [PostService],  // If you're using the PostService across the app, include it here
   bootstrap: [AppComponent]

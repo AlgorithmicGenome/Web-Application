@@ -1,11 +1,13 @@
-/* General Reset */
+/*
+!* General Reset *!
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Set Base Body */
+
+!* Set Base Body *!
 body {
     font-family: Arial, Helvetica, sans-serif;
     background: linear-gradient(to right, #eceff1, #ffffff);
@@ -13,13 +15,19 @@ body {
     line-height: 1.6;
 }
 
-/* Header Section */
+!* Header Section *!
 header {
     background: black;
     color: gold;
     padding: 10px 20px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+
+.bold {
+  font-weight: bold;
+  color: gold;
 }
 
 .navbar {
@@ -53,7 +61,7 @@ header {
     color: black;
 }
 
-/* Footer Section */
+!* Footer Section *!
 footer {
     background: black;
     color: gold;
@@ -63,7 +71,7 @@ footer {
     border-top: 3px solid gold;
 }
 
-/* Button Styling */
+!* Button Styling *!
 .btn {
     display: inline-block;
     padding: 10px 20px;
@@ -84,7 +92,7 @@ footer {
     border: 1px solid gold;
 }
 
-/* Main Content Section */
+!* Main Content Section *!
 .container {
     padding: 20px;
 }
@@ -100,7 +108,7 @@ p {
     color: #555;
 }
 
-/* Utility Classes */
+!* Utility Classes *!
 .text-center {
     text-align: center;
 }
@@ -108,3 +116,4 @@ p {
 .mt-20 {
     margin-top: 20px;
 }
+*/
