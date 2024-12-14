@@ -88,8 +88,7 @@ Robust error-handling mechanisms to manage unexpected client-side and server-sid
 1.	Dashboard with Analytics: Provide users with personalized dashboards.
 2.	Integration of Third-Party APIs: Expand functionalities by integrating tools such as Google Maps API, third-party authentication, or payment gateway systems.
 
-
-6.	Limitations
+6. Limitations
 While this application demonstrates robust functionality, it does have some limitations:
 
 6.1	Scalability
