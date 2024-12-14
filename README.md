@@ -93,7 +93,6 @@ Robust error-handling mechanisms to manage unexpected client-side and server-sid
 6.	Limitations
 While this application demonstrates robust functionality, it does have some limitations:
 
-
 6.1	Scalability
 As the user base grows, the application may experience database bottlenecks unless MongoDB's indexing and sharding strategies are implemented.
 
