@@ -85,7 +85,6 @@ Robust error-handling mechanisms to manage unexpected client-side and server-sid
 
 
 5.4	Advanced Features
-
 1.	Dashboard with Analytics: Provide users with personalized dashboards.
 2.	Integration of Third-Party APIs: Expand functionalities by integrating tools such as Google Maps API, third-party authentication, or payment gateway systems.
 
